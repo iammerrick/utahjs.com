@@ -1,0 +1,301 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title>Utah JavaScript User Group</title>
+  <meta name="description" content="UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!">
+  <meta name="author" content="Members of the Utah JavaScript User Group">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-article">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      
+        <li><a href="/meetings/">Meetings</a></li>
+      
+        <li><a href="/members/">Members</a></li>
+      
+        <li><a href="/contributing/">Contributing</a></li>
+      
+    </ul>
+  </div>
+
+<div id=main class=group>
+<p>It&rsquo;s difficult to talk about modular code in JavaScript without somebody saying &ldquo;Yeah, but JavaScript doesn&rsquo;t have classes.&rdquo;  For kicks, I looked up how wikipedia defines a class:</p>
+
+<blockquote>
+  <p>A Class is a template for an object, a user-defined datatype that contains variables, properties, and methods. A class defines the abstract characteristics of a thing (object), including its characteristics (its attributes, fields or properties) and the things it can do (behaviors) or methods, operations or features). One might say that a class is a blueprint or factory that describes the nature of something. &hellip; Classes provide modularity and structure in an object-oriented computer program. &hellip; Also, the code for a class should be relatively self-contained (generally using encapsulation). <cite>-<a href="http://en.wikipedia.org/wiki/Object-oriented_programming#Class">wikipedia</a></cite></p>
+</blockquote>
+
+<p>A MooTools class is exactly that&ndash;<strong>welcome to JavaScript with <code>Class</code></strong>.</p>
+
+<p>The sooner you master Class, the sooner you&rsquo;ll write maintainable, extensible JavaScript.  After MooTools Core establishes a few things, nearly every other addition to the framework is a class.  Let&rsquo;s dig in:</p>
+
+<h2 id="a-mootools-class">A MooTools Class</h2>
+
+<h3 id="example-1---view-this-on-jsfiddlehttpjsfiddlenetrpflorenceyqxnr">Example 1 - <a href="http://jsfiddle.net/rpflorence/YQXNr/">View this on jsFiddle</a></h3>
+
+<pre><code>var ClassNameSwapper = new Class({
+  
+  current: null,
+
+  initialize: function(element){
+    this.element = document.id(element);
+    this.attach();
+  },
+
+  attach: function(){
+    var self = this;
+    this.element.addEvent('click', function(event){
+      self.setCurrentTo(event.target);
+    });
+  },
+
+  setCurrentTo: function(target){
+    if (target == this.current) return;
+    if (this.current) this.current.removeClass('current');
+    this.current = $(target).addClass('current');
+  }
+
+});
+
+// usage
+var nav = new ClassNameSwapper('main-nav');
+</code></pre>
+
+<p>The Class constructor is a function that takes an object, or template, as its only argument and returns another function.  It&rsquo;s an API abstraction designed to simplify the use of JavaScript&rsquo;s prototypal inheritance.  Perhaps we could call it a &ldquo;generator&rdquo;: it generates enhanced constructor functions.  In the context of MooTools, we call them classes, and the objects they create, instances.</p>
+
+<p>This class does nothing more than move the <code>current</code> css class name around. It has the <code>current</code> property and then three methods: <code>initialize</code>, <code>attach</code>, and <code>setCurrentTo</code>.  When you create a new <code>ClassNameSwapper</code> instance the <code>initialize</code> function is called automatically.</p>
+
+<p><code>initialize</code> stores the parent element and then calls <code>attach</code>, which simply adds a click event listener to the element and passes on the target element that received the click to the <code>setCurrentTo</code> method, which then does some checking and eventually swaps the current class around.  Similar code outside of a class could certainly be shorter and might look like this:</p>
+
+<h3 id="example-2">Example 2</h3>
+
+<pre><code>(function(){
+  // swaps a class name around
+
+  var current = null;
+
+  $('main-nav').addEvent('click', function(event){
+    if (event.target == current) return;
+    if (current) current.removeClass('current');
+    current = $(event.target).addClass('current');
+  });
+
+}());
+</code></pre>
+
+<h2 id="classes-lead-to-modular-testable-reusable-code">Classes lead to modular, testable, reusable code</h2>
+
+<p>Contrasting Example 1 with Example 2, we find many differences:</p>
+
+<ol>
+  <li><strong>The logic is separate from the implementation</strong></li>
+  <li><strong>We can quickly comprehend its purpose by scanning the name of the class and its methods.</strong></li>
+  <li><strong>We can reuse it anywhere, in this application or others.</strong></li>
+  <li><strong>We have an object we can work with anywhere on the page.</strong></li>
+  <li><strong>We can test it outside of the application.</strong></li>
+  <li><strong>We can extend it, and reuse more code.</strong></li>
+</ol>
+
+<h3 id="the-logic-is-out-of-the-application-code">The logic is out of the application code</h3>
+
+<p>I view JavaScript code in two categories: logic and implementation (sometimes I&rsquo;ll refer to implementation as &ldquo;application code.&rdquo;)  It&rsquo;s important to keep the business logic of a script separate from the application code for many reasons: testability, modularity and reusability are the first that come to mind.  Littering business logic throughout your application code destroys all three of these goals and creates a brittle application.  MooTools classes, by design, encourage this separation.</p>
+
+<h3 id="we-can-quickly-comprehend-its-purpose-by-scanning-the-name-of-the-class-and-its-methods">We can quickly comprehend its purpose by scanning the name of the class and its methods</h3>
+
+<p>With well structured classes, and descriptive method and property names, there&rsquo;s little need to comment.  Of course, strange looking code should get a quick comment, but stuff like <code>// swaps a class name around</code> is completely unnecessary.</p>
+
+<h3 id="we-can-reuse-example-1-anywhere-in-this-application-or-others">We can reuse Example 1 anywhere, in this application or others</h3>
+
+<p>If we need to do this again on this page, or another, or even an entirely different project, it&rsquo;s as simple as:</p>
+
+<pre><code>new ClassNameSwapper('other-nav');
+new ClassNameSwapper('other-nav2');
+</code></pre>
+
+<p>In Example 2 we&rsquo;d have to copy and paste that code over and over.  Gross.</p>
+
+<h3 id="we-have-an-object-we-can-work-with-anywhere-on-the-page">We have an object we can work with anywhere on the page</h3>
+
+<p>Note the <code>setCurrentTo</code> method.  When we create a new instance of a class it&rsquo;s just an object. We can manage the state of that object by calling its methods.</p>
+
+<pre><code>var nav = new ClassNameSwapper('main-nav');
+
+// change the &quot;current&quot; item manually
+// maybe in a keyboard event, or after an AJAX request
+nav.setCurrentTo(someElement);
+</code></pre>
+
+<p>In Example 2, we&rsquo;d need all sorts of new code to get something like this to work.</p>
+
+<h3 id="we-can-test-it-outside-of-the-application">We can test it outside of the application.</h3>
+
+<p><code>ClassNameSwapper</code> doesn&rsquo;t care about our application.  We can whip up some automated / interactive tests pretty easily.  </p>
+
+<p><a href="http://jsfiddle.net/rpflorence/tSJpV/">View this on jsFiddle</a></p>
+
+<pre><code>var fixture = $('fixture'),
+    child = $('child'),
+    child2 = $('child2'),
+    nav = new ClassNameSwapper(fixture);
+
+// simulate a click on the child element
+fixture.fireEvent.apply(fixture, ['click', { target: child }]);
+console.log(
+    child.hasClass('current') ? 'passed' : 'failed',
+    '=&gt; ClassNameSwapper should add current class to clicked element'
+);
+
+nav.setCurrentTo(child2);
+console.log(
+    child2.hasClass('current') ? 'passed' : 'failed',
+    '=&gt; `setCurrentTo(child2)` should add &quot;current&quot; class to elements'
+);
+console.log(
+    child.hasClass('current') ? 'failed' : 'passed',
+    '=&gt; `child` should not have current class after child2 is set as current'
+);
+</code></pre>
+
+<p>Results in the log:</p>
+
+<pre><code>passed =&gt; ClassNameSwapper should add current class to clicked element
+passed =&gt; `setCurrentTo(child2)` should add &quot;current&quot; class to elements
+passed =&gt; `child` should not have current class after child2 is set as current
+</code></pre>
+
+<p>Note that testing our code, in Example 2, is completely impossible.</p>
+
+<h3 id="we-can-extend-it-and-reuse-code">We can extend it, and reuse code</h3>
+
+<p>If on this project, or some other project, we needed a class swapper that also responded to hover events we don&rsquo;t have to touch the original class, we can just extend it.</p>
+
+<p><a href="http://jsfiddle.net/rpflorence/HmNZK/">View this on jsFiddle</a></p>
+
+<p>First, we write these tests to see if hovering the child elements adds and removes the <code>hover</code> class:</p>
+
+<pre><code>// simulate a mouseover/out on the child element
+fixture.fireEvent.apply(fixture, ['mouseover', { target: child }]);
+console.log(
+  child.hasClass('hover') ? 'passed' : 'failed',
+  '=&gt; ClassNameSwapper.Hover should add hover class to mouseover-ed element'
+);
+fixture.fireEvent.apply(fixture, ['mouseout', { target: child }]);
+console.log(
+  child.hasClass('hover') ? 'failed' : 'passed',
+  '=&gt; ClassNameSwapper.Hover should remove hover class on mouseout'
+);
+</code></pre>
+
+<p>Then we write code until all the tests pass.</p>
+
+<pre><code>ClassNameSwapper.Hover = new Class({
+
+  Extends: ClassNameSwapper,
+
+  attach: function(){
+    this.parent();
+    var self = this;
+    this.element.addEvents({
+      mouseover: function(event){
+        if (event.target != self.element) self.setHoverTo(event.target);
+      },
+      mouseout: function(event){
+        if (event.target != self.element) self.removeHoverFrom(event.target);
+      }
+    });
+  },
+
+  setHoverTo: function(target){
+    this.lastHovered = $(target).addClass('hover');
+  },
+
+  removeHoverFrom: function(target){
+    $(target).removeClass('hover');
+  }
+
+});
+</code></pre>
+
+<p>Two things going on up there.  First, line 3 has what&rsquo;s called a &ldquo;mutator&rdquo; named <code>Extends</code>.  This tells <code>Class</code> to make <code>ClassNameSwapper</code> the prototype of <code>ClassNameSwapper.Hover</code>, allowing us to reuse everything from the parent class.</p>
+
+<p>Second, note the call to <code>this.parent()</code> in line 6.  This makes a call to the parent&rsquo;s attach method.  This allows us to add functionality to a method while still reusing the original code.</p>
+
+<p>Now imagine we had used the code in Example 2 for this simple widget, to add this new functionality in a few places would be tedious and error-prone.  But with <code>Class</code>, it&rsquo;s simple, we just find the instances of <code>ClassNameSwapper</code> that we want to enhance and replace them.</p>
+
+<pre><code>// var nav = new ClassNameSwapper('main-nav');
+var nav = new ClassNameSwapper.Hover('main-nav');
+</code></pre>
+
+<p>Or, if you&rsquo;re really 1337, extend <code>ClassNameSwapper</code> onto itself and change none of your application code.</p>
+
+</div>
+<div id=meta>
+  <div class="author">
+    <img src="http://www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7?s=200">
+    <h3>About the Author</h3>
+    <dl class=meta>
+
+      <dt>Name:</dt>
+      <dd>Ryan Florence</dd>
+
+      
+        <dt>Location:</dt>
+        <dd>West Jordan, UT</dd>
+      
+
+      
+        <dt>Github:</dt>
+        <dd><a href="https://github.com/rpflorence">rpflorence</a></dd>
+      
+
+      
+        <dt>Twitter:</dt>
+        <dd><a href="https://github.com/ryanflorence">ryanflorence</a></dd>
+      
+
+      
+        <dt>Website:</dt>
+        <dd><a href="http://ryanflorence.com">http://ryanflorence.com</a></dd>
+      
+
+    </dl>
+    <p class=about>Ryan Florence is a front-end web developer from Salt Lake City, Utah and has been creating websites since the early 90's.  He is especially interested in creating experiences that are pleasing to both the end user and the developer inheriting the project.  Ryan is active in the JavaScript community writing plugins, contributing to popular JavaScript libraries, speaking at conferences & meet-ups, and writing about it on the web.  He currently works as a Senior Technical Consultant at Clock Four.</p>
+  </div>
+  <div class="website">
+    <h3>About UtahJS.com</h3>
+    <p>UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!</p>
+<p>JavaScript in the browser, on the server or just about anywhere else.</p>
+<p>We love JavaScript but quite often talk about other topics such as CSS, HTML, cross browser coding, the internet… pretty much, anything that we find interesting.</p>
+<p>Everyone is welcome. Please join us!</p>
+  </div>
+</div>
+</div>
+
+<div id=footer>
+  <p>Site design and code &copy; 2011 UtahJS, MIT license.</p>
+<p>Content and articles are copyrighted to the individual authors.</p>
+</div>
+
+<script>
+  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<!--[if lt IE 7 ]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+<![endif]-->
+  
+</body>
+</html>

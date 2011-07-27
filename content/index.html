@@ -1,0 +1,9 @@
+--- 
+title: Home
+---
+
+<% articles.each do |article| %>
+  <div class=article>
+    <%= link_to article[:title], article %>
+  </div>
+<% end %>

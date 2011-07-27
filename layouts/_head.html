@@ -1,0 +1,24 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title><%= COPY['title'] %></title>
+  <meta name="description" content="<%= COPY['meta_description'] %>">
+  <meta name="author" content="<%= COPY['meta_author'] %>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-<%= @item.kind %>">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      <% pages.each do |page| %>
+        <li><%= link_to page[:title], page %></li>
+      <% end %>
+    </ul>
+  </div>

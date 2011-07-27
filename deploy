@@ -1,0 +1,1 @@
+rsync -glpPrtvz --exclude=".git" ./output/ ryanflor@ryanflorence.com:~/public_html/utahjs.com

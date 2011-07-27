@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+# A few helpful tips about the Rules file:
+#
+# * The order of rules is important: for each item, only the first matching
+#   rule is applied.
+#
+# * Item identifiers start and end with a slash (e.g. “/about/” for the file
+#   “content/about.html”). To select all children, grandchildren, … of an
+#   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
+#   because “*” matches zero or more characters.
+
+compile '/copy*' do
+  # don't compile the copy
+end
+
+compile '/authors*' do
+  # don't compile authors
+end
+
+compile '/public/404/' do
+  filter :erb
+  filter :haml
+  layout 'page'
+end
+
+compile '/public/*' do
+  # don't filter or layout assets
+end
+
+compile '*' do
+  # filter everything with erb
+  filter :erb
+
+  # then filter based on file extension
+  case item[:extension]
+    when 'md'
+      filter :kramdown
+    when 'haml'
+      filter :haml
+    when 'txt'
+      filter :redcloth
+  end
+
+  # layout based on directory
+  layout item.kind
+end
+
+route '/copy*' do
+  # don't route the copy
+end
+
+route '/authors*' do
+  # don't route the copy
+end
+
+route '/public/htaccess/' do
+  '/.htaccess'
+end
+
+route '/public/*' do
+  "#{item.identifier.chop}.#{item[:extension]}".gsub(/\/public/, '')
+end
+
+route '/articles/*' do
+  raw = "#{item.identifier}index.html".gsub(/\/articles/, '')
+  '/' + item.year.to_s + raw
+end
+
+route '/pages/*' do
+  "#{item.identifier}index.html".gsub(/\/pages/, '')
+end
+
+route '*' do
+  "#{item.identifier}index.html"
+end
+
+layout '*', :erb
