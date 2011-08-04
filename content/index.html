@@ -2,8 +2,24 @@
 title: Home
 ---
 
-<% articles.each do |article| %>
-  <div class=article>
-    <%= link_to article[:title], article %>
+<div id=main class=group>
+  <h1>Articles</h1>
+  <ul class=articleList>
+    <% articles.each do |article| %>
+    <li>
+      <a href="<%= article.path %>">
+        <%= article[:title] %><br>
+        <small>By <%= article.author['name'] %>, published <%= Date.parse(article[:date]).strftime("%Y-%m-%d") %></small>
+      </a>      
+    </li>
+    <% end %>  
+  </ul>
+</div>
+
+<div id=meta>
+  <div class=group>
+    <h3>About UtahJS.com</h3>
+    <%= COPY['description'] %>
   </div>
-<% end %>
+</div>
+

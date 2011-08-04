@@ -14,25 +14,31 @@ class Nanoc3::Item
   end
 
   def page?
-    self.kind == 'page'
+    self.readable? && self.kind == 'page'
   end
 
   def article?
-    self.kind == 'article'
+    self.readable? && self.kind == 'article'
+  end
+
+  def readable?
+    readable = %w[html md haml txt]
+    readable.include? self.attributes[:extension]
   end
 
   def author
-    if !@author_meta
-      @author_meta = YAML.load_file('content/authors/' + self[:author] + '.yml')
-      md5 = Digest::MD5.hexdigest @author_meta['email']
-      @author_meta['gravatar'] = 'http://www.gravatar.com/avatar/' + md5
-    end
-    
+    @author_meta ||= get_author
+  end
+
+  def get_author
+    @author_meta = YAML.load_file('content/members/' + self[:author] + '.yml')
+    md5 = Digest::MD5.hexdigest @author_meta['email']
+    @author_meta['gravatar'] = 'http://www.gravatar.com/avatar/' + md5
     @author_meta
   end
 
   def year
-    date = Date.parse self.attributes[:date]
+    date = Date.parse(self.readable? ? self.attributes[:date] : self.parent.attributes[:date])
     date.year
   end
 end

@@ -1,5 +1,5 @@
 --- 
-title: Second
+title: Using RequireJS to Optimize Your Projects
 author: Ryan Florence
 date: Thu Jul 21 23:40:43 -0600 2011
 ---

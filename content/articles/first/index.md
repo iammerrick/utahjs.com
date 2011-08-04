@@ -1,5 +1,5 @@
 --- 
-title: First
+title: Ender and the Micro-library Movement
 author: Ryan Florence
 date: Thu Jul 21 23:33:00 -0600 2011
 ---
@@ -17,32 +17,7 @@ A MooTools Class
 
 ### Example 1 - [View this on jsFiddle](http://jsfiddle.net/rpflorence/YQXNr/)
 
-	var ClassNameSwapper = new Class({
-	  
-	  current: null,
-	
-	  initialize: function(element){
-	    this.element = document.id(element);
-	    this.attach();
-	  },
-	
-	  attach: function(){
-	    var self = this;
-	    this.element.addEvent('click', function(event){
-	      self.setCurrentTo(event.target);
-	    });
-	  },
-	
-	  setCurrentTo: function(target){
-	    if (target == this.current) return;
-	    if (this.current) this.current.removeClass('current');
-	    this.current = $(target).addClass('current');
-	  }
-	
-	});
-	
-	// usage
-	var nav = new ClassNameSwapper('main-nav');
+<%= codeblock('first/01.js') %>
 
 The Class constructor is a function that takes an object, or template, as its only argument and returns another function.  It's an API abstraction designed to simplify the use of JavaScript's prototypal inheritance.  Perhaps we could call it a "generator": it generates enhanced constructor functions.  In the context of MooTools, we call them classes, and the objects they create, instances.
 
@@ -52,18 +27,7 @@ This class does nothing more than move the `current` css class name around. It h
 
 ### Example 2
 
-	(function(){
-	  // swaps a class name around
-	
-	  var current = null;
-
-	  $('main-nav').addEvent('click', function(event){
-	    if (event.target == current) return;
-	    if (current) current.removeClass('current');
-	    current = $(event.target).addClass('current');
-	  });
-
-	}());
+<%= codeblock('first/02.js') %>
 
 Classes lead to modular, testable, reusable code
 ------------------------------------------------

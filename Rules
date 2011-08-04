@@ -14,8 +14,8 @@ compile '/copy*' do
   # don't compile the copy
 end
 
-compile '/authors*' do
-  # don't compile authors
+compile '/members*' do
+  # don't compile members
 end
 
 compile '/public/404/' do
@@ -43,14 +43,14 @@ compile '*' do
   end
 
   # layout based on directory
-  layout item.kind
+  layout item.kind if @item.readable?
 end
 
 route '/copy*' do
   # don't route the copy
 end
 
-route '/authors*' do
+route '/members*' do
   # don't route the copy
 end
 
@@ -63,8 +63,8 @@ route '/public/*' do
 end
 
 route '/articles/*' do
-  raw = "#{item.identifier}index.html".gsub(/\/articles/, '')
-  '/' + item.year.to_s + raw
+  base = '/' + @item.year.to_s + @item.identifier.gsub(/\/articles/, '')
+  @item.readable? ? base + 'index.html' : base.chop + '.' + item[:extension]
 end
 
 route '/pages/*' do
