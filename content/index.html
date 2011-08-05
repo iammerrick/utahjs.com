@@ -8,6 +8,7 @@ title: Home
     <% articles.each do |article| %>
     <li>
       <a href="<%= article.path %>">
+        <img src="<%= article.author['gravatar'] %>?s=75">
         <%= article[:title] %><br>
         <small>By <%= article.author['name'] %>, published <%= Date.parse(article[:date]).strftime("%Y-%m-%d") %></small>
       </a>      

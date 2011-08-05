@@ -190,25 +190,31 @@ a:hover {
   margin-left: -7px;
 }
 
+.articleList li {
+  clear: both;
+}
+
 .articleList a {
   display: block;
   border-left: solid 3px transparent;
-  font-size: 30px;
+  font-size: 24px;
   padding-left: 8px;
   margin-top: 20px;
   margin-left: -8px;
   margin-bottom: 20px;
+  min-height: 75px;
 }
 
 .articleList small {
   color: #444;
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .articleList a:hover {
   text-decoration: none;
   border-left-color: #444;
 }
+
 
 #main code {
   font-family: monaco, consolas, monospace;
@@ -248,4 +254,10 @@ iframe {
 
 #members > li {
   padding-bottom: 20px;
+}
+
+.articleList img {
+  float: left;
+  margin-right: 10px;
+  -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.5);
 }
