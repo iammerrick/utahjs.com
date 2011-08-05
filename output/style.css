@@ -236,3 +236,16 @@ a:hover {
 iframe {
     border: solid 1px;
 }
+
+#members {
+  list-style: none;
+  padding: 0;
+}
+
+#members .about {
+  padding: 0;
+}
+
+#members > li {
+  padding-bottom: 20px;
+}
