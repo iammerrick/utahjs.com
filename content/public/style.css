@@ -155,8 +155,9 @@ h2.meta {
   margin: 0;
   font-size: 80%;
   padding: 20px 5%;
-  color: #000;
+  color: #3a3c3f;
   text-align: center;
+  background: #18191a;
 }
 
 #footer p {
@@ -176,7 +177,7 @@ h1 a {
 }
 
 a {
-  color: #156de7;
+  color: #268BD2;
   text-decoration: none;
 }
 
@@ -216,29 +217,6 @@ a:hover {
 }
 
 
-#main code {
-  font-family: monaco, consolas, monospace;
-  font-size: 90%;
-  background-color: #fff;
-  border: 1px solid #e0e0e0;
-}
-#main pre {
-  border: 1px solid #aaa;
-  background-color: #fff;
-  display: block;
-}
-
-#main pre code {
-  overflow-x: auto;
-  max-height: 600px;
-  font-size: 12px;
-  line-height: 1.4em;
-  display: block;
-  padding: 10px;
-  border: 0;
-  background-color: inherit;
-}
-
 iframe {
     border: solid 1px;
 }
@@ -260,4 +238,136 @@ iframe {
   float: left;
   margin-right: 10px;
   -webkit-box-shadow: 0 2px 3px rgba(0,0,0,0.5);
+}
+
+/************* solarized theme ****************/
+pre {
+  line-height: 1.3;
+  overflow: auto;
+  border: solid 1px;
+  font-size: 100%;
+  background: #FDF6E3;
+  color: #586E75;
+}
+
+pre ol {
+  padding-top: 0.5em;
+  padding-bottom: 1.25em;
+  margin: 0;
+}
+
+pre code {
+  display: block;
+  padding-top: 0.5em;
+  padding-bottom: 0;
+}
+
+pre.lines ol {
+  float: left;
+}
+
+pre.lines ol {
+  margin: 0;
+  background: #EBE6D8;
+  border-right: solid 1px #D7D3C6;
+  margin-right: 0.5em;
+  color: #93A1A1;
+}
+
+pre.lines li {
+  width: 0;
+}
+
+.comment {
+  color: #93A1A1;
+}
+
+.string {
+  color: #2AA198;
+}
+
+.string.regexp {
+  color: #D30102;
+}
+
+.constant.numeric {
+  color: #D33682;
+}
+
+.variable.language,
+.variable.other {
+  color: #268BD2;
+}
+
+.keyword {
+  color: #859900;
+}
+
+.storage {
+  color: #073642;
+  font-weight: bold;
+}
+
+.entity.name.class,
+.entity.name.type.class {
+  color: #268BD2;
+}
+
+.entity.name.function {
+  color: #268BD2;
+}
+
+.punctuation.definition.variable {
+  color: #859900;
+}
+
+.punctuation.section.embedded.begin,
+.punctuation.section.embedded.end {
+  color: #D30102;
+}
+
+.constant.language,
+.meta.preprocessor {
+  color: #B58900;
+}
+
+.support.function.construct,
+.keyword.other.new {
+  color: #D30102;
+}
+
+.constant.character,
+.constant.other {
+  color: #CB4B16;
+}
+
+.entity.name.tag {
+  color: #268BD2;
+  font-weight: bold;
+}
+
+.punctuation.definition.tag.begin,
+.punctuation.definition.tag.end {
+  color: #93A1A1;
+}
+
+.entity.other.attribute-name {
+  color: #93A1A1;
+}
+
+.support.function {
+  color: #268BD2;
+}
+
+.punctuation.separator.continuation {
+  color: #D30102;
+}
+
+.support.type,
+.support.class {
+  color: #859900;
+}
+
+.support.type.exception {
+  color: #CB4B16;
 }

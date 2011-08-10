@@ -1,40 +1,40 @@
 <%= render '_head' %>
 <div id=main class=group>
   <h1 class=articleTitle><%= @item[:title] %></h1>
-  <p><i>By <%= @item.author['name'] %>, published <%= Date.parse(item[:date]).strftime("%Y-%m-%d") %></i></p>
+  <p><i>By <%= @item.author.name %>, published <%= Date.parse(item[:date]).strftime("%Y-%m-%d") %></i></p>
 <%= yield %>
 </div>
 <div id=meta>
   <div class="author">
-    <img src="<%= @item.author['gravatar'] %>?s=200">
+    <img src="<%= @item.author.gravatar %>?s=200">
     <h3>About the Author</h3>
     <dl class=meta>
 
       <dt>Name:</dt>
-      <dd><%= @item.author['name'] %></dd>
+      <dd><%= @item.author.name %></dd>
 
-      <% if @item.author['location'] %>
+      <% if @item.author.location %>
         <dt>Location:</dt>
-        <dd><%= @item.author['location'] %></dd>
+        <dd><%= @item.author.location %></dd>
       <% end %>
 
-      <% if @item.author['github'] %>
+      <% if @item.author.github %>
         <dt>Github:</dt>
-        <dd><a href="https://github.com/<%= @item.author['github'] %>"><%= @item.author['github'] %></a></dd>
+        <dd><a href="https://github.com/<%= @item.author.github %>"><%= @item.author.github %></a></dd>
       <% end %>
 
-      <% if @item.author['twitter'] %>
+      <% if @item.author.twitter %>
         <dt>Twitter:</dt>
-        <dd><a href="https://github.com/<%= @item.author['twitter'] %>"><%= @item.author['twitter'] %></a></dd>
+        <dd><a href="https://github.com/<%= @item.author.twitter %>"><%= @item.author.twitter %></a></dd>
       <% end %>
 
-      <% if @item.author['website'] %>
+      <% if @item.author.website %>
         <dt>Website:</dt>
-        <dd><a href="<%= @item.author['website'] %>"><%= @item.author['website'] %></a></dd>
+        <dd><a href="<%= @item.author.website %>"><%= @item.author.website %></a></dd>
       <% end %>
 
     </dl>
-    <p class=about><%= @item.author['about'] %></p>
+    <p class=about><%= @item.author.about %></p>
   </div>
   <div class="website">
     <h3>About UtahJS.com</h3>

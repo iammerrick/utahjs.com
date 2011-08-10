@@ -7,31 +7,16 @@ def articles
 end
 
 def codeblock(path)
-  code     = ''
   language = path.match(/\.([^\.]+)$/)[1]
-
+  code     = "<pre><code data-language='#{language}'>"
   file     = File.new('content/articles/' + path, 'r')
   while (line = file.gets)
-    code += "\t#{line}"
+    code += "#{line}"
   end
+  code += "</code></pre>"
   file.close
 
   code
-end
-
-def members
-  members = []
-  dir = 'content/members'
-  Dir.new(dir).each do |file|
-    name = dir + '/' + file
-    if File.file?(name)
-      member = YAML.load_file(name)
-      member['filename'] = file
-      member['gravatar'] = gravatar_for member['email']
-      members << member
-    end
-  end
-  members
 end
 
 def gravatar_for(email)
@@ -39,11 +24,9 @@ def gravatar_for(email)
   'http://www.gravatar.com/avatar/' + md5
 end
 
+# need to move this to an instance method of Member
 def member_articles(member)
   articles.select do |item|
-    puts item[:author]
-    puts member['filename']
-    puts
-    item[:author] + '.yml' == member['filename']
+    item[:author] == member.filename
   end
 end

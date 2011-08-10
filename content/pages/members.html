@@ -4,43 +4,42 @@ order: 2
 ---
 
 <ul id=members>
-  <% members.each do |member| %>
+  <% Member.all.each do |member| %>
     <li>
       <div class="author">
-        <img src="<%= member['gravatar'] %>?s=200">
-        <h3><%= member['name'] %></h3>
+        <img src="<%= member.gravatar %>?s=200" width="200" height="200">
+        <h3><%= member.name %></h3>
         <dl class=meta>
-          <% if member['location'] %>
+          <% if member.location %>
             <dt>Location:</dt>
-            <dd><%= member['location'] %></dd>
+            <dd><%= member.location %></dd>
           <% end %>
 
-          <% if member['github'] %>
+          <% if member.github %>
             <dt>Github:</dt>
-            <dd><a href="https://github.com/<%= member['github'] %>"><%= member['github'] %></a></dd>
+            <dd><a href="https://github.com/<%= member.github %>"><%= member.github %></a></dd>
           <% end %>
 
-          <% if member['twitter'] %>
+          <% if member.twitter %>
             <dt>Twitter:</dt>
-            <dd><a href="https://github.com/<%= member['twitter'] %>"><%= member['twitter'] %></a></dd>
+            <dd><a href="https://github.com/<%= member.twitter %>"><%= member.twitter %></a></dd>
           <% end %>
 
-          <% if member['website'] %>
+          <% if member.website %>
             <dt>Website:</dt>
-            <dd><a href="<%= member['website'] %>"><%= member['website'] %></a></dd>
+            <dd><a href="<%= member.website %>"><%= member.website %></a></dd>
           <% end %>
         </dl>
-        <p class=about><%= member['about'] %></p>
+        <p class=about><%= member.about %></p>
         <% if member_articles(member).length %>
-          <h4>Articles from <%= member['name'] %></h4>
+          <h4>Articles from <%= member.name %></h4>
           <ul>
             <% member_articles(member).each do |article| %>
               <li><%= link_to article[:title], article %></li>
             <% end %>
           </ul>
         <% end %>
-      </div>
-      
+      </div>      
     </li>
   <% end %>  
 </ul>

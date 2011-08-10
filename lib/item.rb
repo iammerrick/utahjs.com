@@ -27,14 +27,7 @@ class Nanoc3::Item
   end
 
   def author
-    @author_meta ||= get_author
-  end
-
-  def get_author
-    @author_meta = YAML.load_file('content/members/' + self[:author] + '.yml')
-    md5 = Digest::MD5.hexdigest @author_meta['email']
-    @author_meta['gravatar'] = 'http://www.gravatar.com/avatar/' + md5
-    @author_meta
+    @author ||= Member.new(self[:author])
   end
 
   def year
