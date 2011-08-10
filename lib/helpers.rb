@@ -30,3 +30,11 @@ def member_articles(member)
     item[:author] == member.filename
   end
 end
+
+def title(item)
+  if item[:title]
+    (item[:title] + ' | ' + COPY['title']).titleize
+  else
+    COPY['title'].titleize
+  end 
+end

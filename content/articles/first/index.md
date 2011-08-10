@@ -1,5 +1,5 @@
 --- 
-title: Ender and the Micro-library Movement
+title: Ender and the micro-library Movement
 author: Ryan Florence
 date: Thu Jul 21 23:33:00 -0600 2011
 ---

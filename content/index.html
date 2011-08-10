@@ -9,7 +9,7 @@ title: Home
     <li>
       <a href="<%= article.path %>">
         <img src="<%= article.author.gravatar %>?s=75" width=75 height=75>
-        <%= article[:title] %><br>
+        <%= article[:title].titleize %><br>
         <small>By <%= article.author.name %>, published <%= Date.parse(article[:date]).strftime("%Y-%m-%d") %></small>
       </a>      
     </li>

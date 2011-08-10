@@ -35,7 +35,7 @@ order: 2
           <h4>Articles from <%= member.name %></h4>
           <ul>
             <% member_articles(member).each do |article| %>
-              <li><%= link_to article[:title], article %></li>
+              <li><%= link_to article[:title].titleize, article %></li>
             <% end %>
           </ul>
         <% end %>

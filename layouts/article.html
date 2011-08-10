@@ -1,6 +1,6 @@
 <%= render '_head' %>
 <div id=main class=group>
-  <h1 class=articleTitle><%= @item[:title] %></h1>
+  <h1 class=articleTitle><%= @item[:title].titleize %></h1>
   <p><i>By <%= @item.author.name %>, published <%= Date.parse(item[:date]).strftime("%Y-%m-%d") %></i></p>
 <%= yield %>
 </div>
