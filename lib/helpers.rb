@@ -1,9 +1,12 @@
+require 'date'
+require 'time'
+
 def pages
   @items.select { |item| item.page? }.sort_by{ |item| item[:order] }
 end
 
 def articles
-  @items.select { |item| item.article? }.sort_by{ |item| item[:date] }
+  @items.select { |item| item.article? }.sort_by{ |item| Time.parse(item[:date]) }.reverse
 end
 
 def codeblock(path)
