@@ -1,0 +1,90 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title>node.js on Windows 7 | Utah JavaScript User Group</title>
+  <meta name="description" content="UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!">
+  <meta name="author" content="Members of the Utah JavaScript User Group">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-article">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      <li><a href="/">Articles</a></li>
+      
+        <li><a href="/meetings/">Meetings</a></li>
+      
+        <li><a href="/members/">Members</a></li>
+      
+        <li><a href="/contributing/">Join / Contribute</a></li>
+      
+    </ul>
+  </div>
+
+<div id=main class=group>
+  <h1 class=articleTitle>node.js on Windows 7</h1>
+  <p><i>By Dan Baker, published 2010-09-10</i></p>
+Well, it wasn't as easy getting node.js to compile on my Windows 7 box... I followed my own instructions <a href="http://utahjs.com/2010/09/09/node-js-on-windows/">here</a>. I installed cygwin on my D: drive. When I ran "./configure", I got a series of errors. The FIRST error was something like: <pre>Checking for program gcc or cc : /usr/bin/gcc 0 [main] python 3968 C:\cygwin\bin\python.exe: *** fatal error - unable to remap \\?\D:\cygwin\lib\python2.6\lib-dynload\time.dll to same address as parent: 0x360000 != 0x3E0000</pre> After lots of googling, I discovered I needed to "rebase". After more googling and trying various things ... I discovered the magic code. It is as follows: To "rebaseall" my cygwin: <ol> <li>close cygwin</li> <li>open dos box to ...\cygwin\bin</li> <li>"ash rebaseall"</li> <li>close dos box</li> <li>re-run cygwin</li> <li>cd node</li> <li>./configure (cross fingers, wait ... "SUCCESS", whew!)</li> </ol> I then went back to my instructions for Windows XP, and everything worked great. Life is good.
+</div>
+<div id=meta>
+  <div class="author">
+    <img src="http://www.gravatar.com/avatar/ff931fadd7674b0d064f7da76ee7a2b0?s=200&&d=monsterid">
+    <h3>About the Author</h3>
+    <dl class=meta>
+
+      <dt>Name:</dt>
+      <dd>Dan Baker</dd>
+
+      
+        <dt>Location:</dt>
+        <dd>Lindon, UT</dd>
+      
+
+      
+
+      
+
+      
+
+    </dl>
+    <p class=about>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+  <div class="website">
+    <h3>About UtahJS.com</h3>
+    <p>UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!</p>
+<p>JavaScript in the browser, on the server or just about anywhere else.</p>
+<p>We love JavaScript but quite often talk about other topics such as CSS, HTML, cross browser coding, the internet… pretty much, anything that we find interesting.</p>
+<p>Everyone is welcome. Please join us!</p>
+  </div>
+</div>
+
+<div id=footer>
+  <p>Site design and code &copy; 2011 UtahJS, MIT license.</p>
+<p>Content and articles are copyrighted to the individual authors.</p>
+</div>
+
+<script>
+  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<script src="/js/hilite.js"></script>
+<script src="/js/languages/javascript.js"></script>
+<script src="/js/app.js"></script>
+
+<!--[if lt IE 7 ]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+<![endif]-->
+  
+</body>
+</html>

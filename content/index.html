@@ -8,9 +8,9 @@ title: Home
     <% articles.each do |article| %>
     <li>
       <a href="<%= article.path %>">
-        <img src="<%= article.author.gravatar %>?s=75" width=75 height=75>
+        <img src="<%= article.author.gravatar %>?s=75&&d=monsterid" width=75 height=75>
         <%= article[:title].titleize %><br>
-        <small>By <%= article.author.name %>, published <%= Date.parse(article[:date]).strftime("%Y-%m-%d") %></small>
+        <small>By <%= article.author.name %>, published <%= Date.parse(article[:date].to_s).strftime("%Y-%m-%d") %></small>
       </a>      
     </li>
     <% end %>  

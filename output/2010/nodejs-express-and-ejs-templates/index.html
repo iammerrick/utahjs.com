@@ -1,0 +1,90 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title>NodeJS Express and EJS Templates | Utah JavaScript User Group</title>
+  <meta name="description" content="UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!">
+  <meta name="author" content="Members of the Utah JavaScript User Group">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-article">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      <li><a href="/">Articles</a></li>
+      
+        <li><a href="/meetings/">Meetings</a></li>
+      
+        <li><a href="/members/">Members</a></li>
+      
+        <li><a href="/contributing/">Join / Contribute</a></li>
+      
+    </ul>
+  </div>
+
+<div id=main class=group>
+  <h1 class=articleTitle>NodeJS Express and EJS Templates</h1>
+  <p><i>By Dan Baker, published 2010-09-25</i></p>
+After playing with Express, I realized it supports "View Rendering". There are three Template Engines mentioned on the <a href="http://expressjs.com/guide.html#Template-Engines">Express</a> help page. A template engine is an easy way for a web designer to create web pages that are somewhat dynamic in nature. Like a login page that displays an error message from the previous login attempt. One of the Template Engines mentioned by Express is <a href="http://github.com/visionmedia/ejs">EJS</a> ("Embedded JavaScript templates for node - Express compliant") So, this time I'm going to discuss how to use the EJS Template Engine with Express on NodeJS. <strong>STEP 1</strong>: Installation <pre>From <a href="http://expressjs.com/guide.html#Installation">Express</a>: npm install express From <a href="http://github.com/visionmedia/ejs">EJS</a>: npm install ejs </pre> This will install Express and EJS into your NodeJS installation. <strong>STEP 2</strong>: Creating the files <pre> app.js /views/ login.ejs </pre> Create yourself a directory (I called mine "testejs"). We'll need an "app.js" file and a "views" folder. The views folder will need a "login.ejs" file. (The login.ejs file will contain *mosty* html. (The extension ejs tells Express to magically require the ejs system.) <strong>STEP 3</strong>: Fill in the files app.js: [javascript] var PORT = 9000; var express = require(&quot;express&quot;); var app = express.createServer(); // special handling of the root folder app.get(&quot;/&quot;, function(req, res){ res.render('login.ejs', { layout:false }); }); // startup this server app.listen(PORT); console.log(&quot;Server on port %s&quot;, app.address().port); [/javascript] login.ejs: <pre>&lt;html&gt; &lt;body style="background-color:#cccc77"&gt; Login&lt;br&gt; &lt;table&gt; &lt;form method="GET" action="/"&gt; &lt;tr&gt;&lt;td&gt;Username:&lt;/td&gt;&lt;td&gt;&lt;input type="text" name="user"&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;Password:&lt;/td&gt;&lt;td&gt;&lt;input type="password" name="pass"&gt;&lt;/td&gt;&lt;/tr&gt; &lt;tr&gt;&lt;td&gt;&lt;/td&gt;&lt;td&gt;&lt;input type="submit" name="submit" value="Login"&gt;&lt;/td&gt;&lt;/tr&gt; &lt;/form&gt; &lt;/table&gt; &lt;/body&gt; &lt;/html&gt; </pre> <strong>STEP 4</strong>: Run and Try it Run your app: <pre>node app.js </pre> View your login page (which is the home page) <a href="http://localhost:9000/">localhost:9000</a> <strong>STEP 5</strong>: Dynamic Content If you have never used a template engine before (or PHP), this may be a little weird. The concept is that the .ejs file is processed on the server and the result of the process is html. That html is sent to the browser. First we will change the login.ejs file to expect a possible error message from the server. This error message will be displayed on a failed login attempt. <pre> &lt;h1&gt;Login&lt;/h1&gt; &lt;h3 style="color:red"&gt;&lt;%= errorMessage %&gt;&lt;/h3&gt; </pre> The magic happens between the "&lt;%" and "%&gt;". That area is processed on the NodeJS Server. The "=" sign means to replace this area with the return value of the expression (in this case, the string value of a variable called "errorMessage"). Next, we will change the app.js file to send some "local data" to the ejs engine. Everything in the "locals" object is sent to the ejs system. We know the login.ejs file is expecting a variable called "errorMessage" with an error string. Note: The "locals" is in JSON format. [javascript] app.get(&quot;/&quot;, function(req, res){ res.render('login.ejs', { layout:false, locals: { errorMessage: &quot;Error: password wrong.&quot; } }); }); [/javascript] View your new dynamic <a href="http://localhost:9000/">login page</a>. The awesomeness of using a template system like EJS is that the html can live on the disk in a file. That file can be generated by a web designer, using web designer tools. Obviously, the web designer has to know what "locals" data will be sent to the page (like "errorMessage"). <strong>STEP 6</strong>: Configuration If you rarely use layouts you can add the following to your app.js, and remove the "layout:false" from the res.render call: [javascript] app.set('view options', { layout: false }); [/javascript] If you are only going to use a single Template Engine then you can add the following to your app.js, and never have to specify the extension on your res.render call: [javascript] app.set('view engine', 'ejs'); [/javascript] This leaves our "get" to be the following: [javascript] app.get(&quot;/&quot;, function(req, res){ res.render('login', { locals: { errorMessage: &quot;Error: password wrong.&quot; } }); }); [/javascript] Of course, the error message would be created in code, after checking the login credentials. But, you get the idea. Other things to look into: <a href="http://expressjs.com/guide.html#View-Rendering">Layouts</a> <a href="http://expressjs.com/guide.html#View-Partials">View Partials</a>
+</div>
+<div id=meta>
+  <div class="author">
+    <img src="http://www.gravatar.com/avatar/ff931fadd7674b0d064f7da76ee7a2b0?s=200&&d=monsterid">
+    <h3>About the Author</h3>
+    <dl class=meta>
+
+      <dt>Name:</dt>
+      <dd>Dan Baker</dd>
+
+      
+        <dt>Location:</dt>
+        <dd>Lindon, UT</dd>
+      
+
+      
+
+      
+
+      
+
+    </dl>
+    <p class=about>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+  <div class="website">
+    <h3>About UtahJS.com</h3>
+    <p>UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!</p>
+<p>JavaScript in the browser, on the server or just about anywhere else.</p>
+<p>We love JavaScript but quite often talk about other topics such as CSS, HTML, cross browser coding, the internet… pretty much, anything that we find interesting.</p>
+<p>Everyone is welcome. Please join us!</p>
+  </div>
+</div>
+
+<div id=footer>
+  <p>Site design and code &copy; 2011 UtahJS, MIT license.</p>
+<p>Content and articles are copyrighted to the individual authors.</p>
+</div>
+
+<script>
+  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<script src="/js/hilite.js"></script>
+<script src="/js/languages/javascript.js"></script>
+<script src="/js/app.js"></script>
+
+<!--[if lt IE 7 ]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+<![endif]-->
+  
+</body>
+</html>

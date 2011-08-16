@@ -10,22 +10,22 @@ order: 2
         <img src="<%= member.gravatar %>?s=200" width="200" height="200">
         <h3><%= member.name %></h3>
         <dl class=meta>
-          <% if member.location %>
+          <% if defined? member.location %>
             <dt>Location:</dt>
             <dd><%= member.location %></dd>
           <% end %>
 
-          <% if member.github %>
+          <% if defined? member.github %>
             <dt>Github:</dt>
             <dd><a href="https://github.com/<%= member.github %>"><%= member.github %></a></dd>
           <% end %>
 
-          <% if member.twitter %>
+          <% if defined? member.twitter %>
             <dt>Twitter:</dt>
             <dd><a href="https://github.com/<%= member.twitter %>"><%= member.twitter %></a></dd>
           <% end %>
 
-          <% if member.website %>
+          <% if defined? member.website %>
             <dt>Website:</dt>
             <dd><a href="<%= member.website %>"><%= member.website %></a></dd>
           <% end %>

@@ -1,0 +1,7 @@
+---
+title: "node.js on Windows 7"
+author: Dan
+date: 2010-09-10
+---
+
+Well, it wasn't as easy getting node.js to compile on my Windows 7 box... I followed my own instructions <a href="http://utahjs.com/2010/09/09/node-js-on-windows/">here</a>. I installed cygwin on my D: drive. When I ran "./configure", I got a series of errors. The FIRST error was something like: <pre>Checking for program gcc or cc : /usr/bin/gcc 0 [main] python 3968 C:\cygwin\bin\python.exe: *** fatal error - unable to remap \\?\D:\cygwin\lib\python2.6\lib-dynload\time.dll to same address as parent: 0x360000 != 0x3E0000</pre> After lots of googling, I discovered I needed to "rebase". After more googling and trying various things ... I discovered the magic code. It is as follows: To "rebaseall" my cygwin: <ol> <li>close cygwin</li> <li>open dos box to ...\cygwin\bin</li> <li>"ash rebaseall"</li> <li>close dos box</li> <li>re-run cygwin</li> <li>cd node</li> <li>./configure (cross fingers, wait ... "SUCCESS", whew!)</li> </ol> I then went back to my instructions for Windows XP, and everything worked great. Life is good.

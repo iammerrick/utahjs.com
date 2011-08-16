@@ -1,0 +1,7 @@
+---
+title: "NodeJS and Express"
+author: Dan
+date: 2010-09-09
+---
+
+So, now that nodejs is installed and running, it's time to start using it. I've heard that "Express" is super-awesome, so I walked through the page at <a href="http://nodeknockout.posterous.com/countdown-to-knockout-post-2-hello-world-with">nodeknockout</a>, and this is what I did: <ol> <li>Install Express</li> <ul> <li>$ curl http://expressjs.com/install.sh | sh</li> <li>This will install express and connect into a hidden folder at [USER]/.node_libraries/</li> <li>It looks like node packages installed in this special area can be referenced as if they are "base" packages -- var express = require("express")</li> </ul> <li>Create a simple "Express App"</li> <ul> <li>Create a new folder somewhere, with a file called "app.js"</li> <li>Edit app.js with the following text:</li> <pre> var express = require("express"); var app = express.createServer(); app.use(express.logger()); app.get("/", function(req, res){ res.send("Hello World"); }); app.listen(8124); console.log("Express server started on port %s", app.address().port); </pre> <li>Note: On my cygwin install, I had to specify a port# for the app.listen(), or it threw an exception</li> </ul> <li>Run this new nodejs express app: $ node app.js</li> <li>View in the browser at <a href="http://localhost:8124/">localhost</li> </ol>

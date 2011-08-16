@@ -6,7 +6,7 @@ def pages
 end
 
 def articles
-  @items.select { |item| item.article? }.sort_by{ |item| Time.parse(item[:date]) }.reverse
+  @items.select { |item| item.article? }.sort_by{ |item| Time.parse(item[:date].to_s) }.reverse
 end
 
 def codeblock(path)

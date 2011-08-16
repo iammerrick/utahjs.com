@@ -1,7 +1,7 @@
 --- 
 title: Ender and the micro-library Movement
 author: Ryan Florence
-date: Thu Jul 21 23:33:00 -0600 2011
+date: 2011-07-01
 ---
 
 It's difficult to talk about modular code in JavaScript without somebody saying "Yeah, but JavaScript doesn't have classes."  For kicks, I looked up how wikipedia defines a class:

@@ -1,0 +1,7 @@
+---
+title: "Using ECMAScript 5 getters and setters with NodeJS"
+author: Kip
+date: 2010-09-24
+---
+
+Did you know you could use ECMAScript 5 features in NodeJS? You can! Try this getter and setter example: [javascript] var obj = (function() { var a; return { get a() { return a; }, set a(v) { a = 'prepender: ' + v; } }; })(); obj.a = &quot;Hi&quot;; console.log(obj.a); [/javascript] Running the code gives you the following: [text light="true"] $ node test1.js prepender: Hi [/text] In the obj function you can not access the a variable directly. Instead you have to access it through the getter and setter. You could use code like this to validate your data before you set a, etc... How cool it this!

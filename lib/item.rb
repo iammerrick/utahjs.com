@@ -31,7 +31,8 @@ class Nanoc3::Item
   end
 
   def year
-    date = Date.parse(self.readable? ? self.attributes[:date] : self.parent.attributes[:date])
+    puts self.identifier
+    date = Date.parse(self.readable? ? self.attributes[:date].to_s : self.parent.attributes[:date].to_s)
     date.year
   end
 end

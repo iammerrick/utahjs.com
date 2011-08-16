@@ -27,6 +27,7 @@ body {
   -webkit-box-shadow: 0px 0px 30px rgba(0,0,0,0.75);
   background: #f4f8ff;
   color: #444;
+  min-height: 600px;
 }
 
 #main {

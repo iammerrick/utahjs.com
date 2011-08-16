@@ -30,7 +30,7 @@
 
 <div id=main class=group>
   <h1 class=articleTitle>Ender and the Micro-Library Movement</h1>
-  <p><i>By Ryan Florence, published 2011-07-21</i></p>
+  <p><i>By Ryan Florence, published 2011-07-01</i></p>
 <p>It&rsquo;s difficult to talk about modular code in JavaScript without somebody saying &ldquo;Yeah, but JavaScript doesn&rsquo;t have classes.&rdquo;  For kicks, I looked up how wikipedia defines a class:</p>
 
 <blockquote>
@@ -132,7 +132,7 @@ new ClassNameSwapper('other-nav2');
 
 <pre><code>var nav = new ClassNameSwapper('main-nav');
 
-// change the &quot;current&quot; item manually
+// change the "current" item manually
 // maybe in a keyboard event, or after an AJAX request
 nav.setCurrentTo(someElement);
 </code></pre>
@@ -160,7 +160,7 @@ console.log(
 nav.setCurrentTo(child2);
 console.log(
     child2.hasClass('current') ? 'passed' : 'failed',
-    '=&gt; `setCurrentTo(child2)` should add &quot;current&quot; class to elements'
+    '=&gt; `setCurrentTo(child2)` should add "current" class to elements'
 );
 console.log(
     child.hasClass('current') ? 'failed' : 'passed',
@@ -171,7 +171,7 @@ console.log(
 <p>Results in the log:</p>
 
 <pre><code>passed =&gt; ClassNameSwapper should add current class to clicked element
-passed =&gt; `setCurrentTo(child2)` should add &quot;current&quot; class to elements
+passed =&gt; `setCurrentTo(child2)` should add "current" class to elements
 passed =&gt; `child` should not have current class after child2 is set as current
 </code></pre>
 
@@ -243,7 +243,7 @@ var nav = new ClassNameSwapper.Hover('main-nav');
 </div>
 <div id=meta>
   <div class="author">
-    <img src="http://www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7?s=200">
+    <img src="http://www.gravatar.com/avatar/749001c9fe6927c4b069a45c2a3d68f7?s=200&&d=monsterid">
     <h3>About the Author</h3>
     <dl class=meta>
 

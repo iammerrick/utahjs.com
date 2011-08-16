@@ -1,0 +1,90 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title>NodeJS Events and Recursion (Readdir) | Utah JavaScript User Group</title>
+  <meta name="description" content="UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!">
+  <meta name="author" content="Members of the Utah JavaScript User Group">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-article">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      <li><a href="/">Articles</a></li>
+      
+        <li><a href="/meetings/">Meetings</a></li>
+      
+        <li><a href="/members/">Members</a></li>
+      
+        <li><a href="/contributing/">Join / Contribute</a></li>
+      
+    </ul>
+  </div>
+
+<div id=main class=group>
+  <h1 class=articleTitle>NodeJS Events and Recursion (Readdir)</h1>
+  <p><i>By Dan Baker, published 2010-09-16</i></p>
+Notice: This is confusing. The code is confusing and the concepts are confusing. But, the results are very easy to use. This is also a nice pattern to follow for when you need to do something similar. The reason I built this function is as follows: I was working in node.js. I was processing an html request. I needed to get two lists of files from different folders, and return both lists for the same request. One of the lists of files needed to be recursive (children folders, and children of children ...). The good ol' way of doing this (like in C or Java) would be to write a single function that would return a collection of files for a given folder. That function would call itself when it found a folder. Finally, when everything finished (the nested recursive calls all returned), the initial call to the function would return ALL the results. Remember, that this will not work in NodeJS using the awesome async calls. So, what is the concept? How do we design this in NodeJS/JavaScript using async calls? The good ol' function signature would look like the following: <pre>var data = readDirectory(path)</pre> But, that will not work here. We know that we will have to call "readdir", which returns immediately. We do get to pass a function to readdir that will get called/ran when readdir is finally finished. We want our new function to act just like readdir. The signature for our new function should end up being something like the following (Note: I've left out error handling to make this easier to read): <pre> readDirectory(path, fnc) fnc = a function that takes a single parameter, which will be the entire data returned. readDirectory(".", function(data) { ...work here... }); </pre> When the entire directory (path) has been read in, we'll want the "data" to be returned something like the following: <pre> data = []; // an array of objects. one object per file or folder in the path data[N].name = file/folder name data[N].stat = the "stat" for the file/folder data[N].children = if exists, another "data" array of objects containing the children Note: data[n].stat.isDirectory() will return true is data[N].name is a folder </pre> Now that we know what the signature looks like, and what data we are getting back, we can design how this new super awesome function is going to actually get it's work done. Here is the outline: (Note: to reduce indentation, most nested function stays at the same indentation level) <ol> <li>call "readdir", and return</li> <li>the function that readdir calls back continues...</li> <li>we now have an array of filenames</li> <li>iterate over the filenames</li> <li>for each filename, run the file system "stat" function. Which returns immediately</li> <li>the function that stat calls back continues...</li> <li>count the number of stat call backs, so we know the last file that calls back</li> <li>when the last file has called our call back function, we continue...</li> <li>at this point, we have the filename and the stats for the file</li> <li>create an object, and push it onto the data array that will get returned</li> <li>IF this filename is a folder then do the following:</li> <ol> <li>call ourself (readDirectory) with the path + filename</li> <li>when readDirectory calls back, we continue...</li> <li>set the .children attribute of the object to the data returned by readDirectory</li> <li>count the number of children folders processed</li> <li>when the last child folder has been processed then continue...</li> <li>run the original callback function with the original returned data</li> </ol> <li>if we have processed all files AND we didn't find any folders then continue...</li> <li>run the callback function with the data we've gathered</li> </ol> Whew. Did that make any sense at all? The actual code is below, if you want to compare the design to the code. One of the major pain points for me during the creation of this function was: Accessing a specific instance of an object from within a callback. The problem is that the closure saves a reference to the variable (not the variable contents). So, if you are creating a new object ("obj") in a look, and wanting to use that object within a callback function (like I've done here) -- things don't work very nicely. The closure allows you to access the "obj" object, but you get the last value that "obj" contained -- not the value it contained when the callback was created. SO, a quick-n-easy way to save the instance of the variable is to create and run a function. In the code below, see the line that starts "(function(obj2) { ...})(obj);" What this does is to create a function, which expects a single argument that it will call "obj2". Then by wrapping the function in parenthesis, and adding parenthesis at the end, we run the function right now, and pass in the *value* of obj to that function. That function then calls readDirectory with a callback (which creates a closure, which gives access to "obj2"). That sounds complicated and messy -- it isn't too bad. The other minor pain is knowing when all the callbacks have finished for something. Something like running "stat" for every file in a folder. The easy way is to remember the number of times you called "stat" (in the code below it is in the variable "count"). And then, simply decrement the count each time the callback function runs. When we reach zero, we know we are at the last callback. Since all these "stat" functions run async, they may callback in a random order. So, you can't just check when the *last* file has called back. I hope this helps someone deal with this rather confusing issue. The "less complex version" follows. The "more complex version" is at the end of this post. <pre> /** * read a directory (recursively deep) * data[] = an object for each element in the directory * .name = item's name (file or folder name) * .stat = item's stat (.stat.isDirectory() == true IF a folder) * .children = another data[] for the children */ readDirectory = function(path, next) { // queue up a "readdir" file system call (and return) fs.readdir(path, function(err, files) { var count = files.length; // count of files in the current folder var countFolders = 0; var data = []; // iterate over each file in the dir files.forEach(function (name) { // queue up a "stat" file system call for every file (and return) fs.stat(path + "/" + name, function(err, stat) { var obj = {}; obj.name = name; obj.stat = stat; data.push(obj); if (stat.isDirectory()) { countFolders += 1; // perform "readDirectory" on each child folder (which queues up a // "readdir" and returns) (function(obj2) { // obj2 = the "obj" object readDirectory(path + "/" + name, function(data2) { // entire child folder info is in "data2" (1 fewer child // folders to wait to be processed) countFolders -= 1; obj2.children = data2; if (countFolders <= 0) { // sub-folders found. This was the last sub-folder // to processes. next(data); } else { // more children folders to be processed. do nothing here. } }); })(obj); } // 1 more file has been processed. count -= 1; if (count <= 0) { // all files have been processed. if (countFolders <= 0) { // no sub-folders were found. DONE. call "next" next(data); // no sub-folders found } else { // children folders were found. do nothing here. } } }); }); }); }; </pre> Note: please see <a href="http://www.mennovanslooten.nl/blog/post/62">here</a> for how to save variables for the next event-loop (The creation of a function, and running it). <pre> /** * read a directory (recursively deep) * data[] = an object for each element in the directory * .name = item's name (file or folder name) * .stat = item's stat (.stat.isDirectory() == true IF a folder) * .children = another data[] for the children * filter = an object with various filter settings: * .depth = max directory recursion depth to travel * (0 or missing means: infinite) * (1 means: only the folder passed in) * .hidden = true means: process hidden files and folders (defaults to false) * .callback	= callback function: callback(name, path, filter) -- returns truthy to keep the file * * * @param path = path to directory to read (".", ".\apps") * @param callback	= function to callback to: callback(err, data) * @param [filter]	= (optional) filter object */ exports.readDirectory = function(path, callback, filter) { if (filter) { // process filter. are we too deep yet? if (!filter.depthAt) filter.depthAt = 1; // initialize what depth we are at if (filter.depth && filter.depth < filter.depthAt) { callback(undefined, []); // we are too deep. return "nothing found" return; } } // queue up a "readdir" file system call (and return) fs.readdir(path, function(err, files) { if (err) { callback(err); return; } var doHidden = false; // true means: process hidden files and folders if (filter && filter.hidden) { doHidden = true; // filter requests to process hidden files and folders } var count = 0; // count the number of "stat" calls queued up var countFolders = 0; // count the number of "folders" calls queued up var data = []; // the data to return // iterate over each file in the dir files.forEach(function (name) { // ignore files that start with a "." UNLESS requested to process hidden files and folders if (doHidden || name.indexOf(".") !== 0) { // queue up a "stat" file system call for every file (and return) count += 1; fs.stat(path + "/" + name, function(err, stat) { if (err) { callback(err); return; } var processFile = true; if (filter && filter.callback) { processFile = filter.callback(name, stat, filter); } if (processFile) { var obj = {}; obj.name = name; obj.stat = stat; data.push(obj); if (stat.isDirectory()) { countFolders += 1; // perform "readDirectory" on each child folder (which queues up a readdir and returns) (function(obj2) { // obj2 = the "obj" object exports.readDirectory(path + "/" + name, function(err, data2) { if (err) { callback(err); return; } // entire child folder info is in "data2" (1 fewer child folders to wait to be processed) countFolders -= 1; obj2.children = data2; if (countFolders <= 0) { // sub-folders found. This was the last sub-folder to processes. callback(undefined, data); // callback w/ data } else { // more children folders to be processed. do nothing here. } }); })(obj); } } // 1 more file has been processed (or skipped) count -= 1; if (count <= 0) { // all files have been processed. if (countFolders <= 0) { // no sub-folders were found. DONE. no sub-folders found callback(undefined, data); // callback w/ data } else { // children folders were found. do nothing here (we are waiting for the children to callback) } } }); } }); if (count <= 0) {	// if no "stat" calls started, then this was an empty folder callback(undefined, []); // callback w/ empty } }); }; </pre>
+</div>
+<div id=meta>
+  <div class="author">
+    <img src="http://www.gravatar.com/avatar/ff931fadd7674b0d064f7da76ee7a2b0?s=200&&d=monsterid">
+    <h3>About the Author</h3>
+    <dl class=meta>
+
+      <dt>Name:</dt>
+      <dd>Dan Baker</dd>
+
+      
+        <dt>Location:</dt>
+        <dd>Lindon, UT</dd>
+      
+
+      
+
+      
+
+      
+
+    </dl>
+    <p class=about>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+  <div class="website">
+    <h3>About UtahJS.com</h3>
+    <p>UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!</p>
+<p>JavaScript in the browser, on the server or just about anywhere else.</p>
+<p>We love JavaScript but quite often talk about other topics such as CSS, HTML, cross browser coding, the internet… pretty much, anything that we find interesting.</p>
+<p>Everyone is welcome. Please join us!</p>
+  </div>
+</div>
+
+<div id=footer>
+  <p>Site design and code &copy; 2011 UtahJS, MIT license.</p>
+<p>Content and articles are copyrighted to the individual authors.</p>
+</div>
+
+<script>
+  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<script src="/js/hilite.js"></script>
+<script src="/js/languages/javascript.js"></script>
+<script src="/js/app.js"></script>
+
+<!--[if lt IE 7 ]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+<![endif]-->
+  
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+
+  <title>node.js on Windows | Utah JavaScript User Group</title>
+  <meta name="description" content="UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!">
+  <meta name="author" content="Members of the Utah JavaScript User Group">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="body-article">
+  <div id=header class="group">
+    <h1 class=title>UtahJS</h1>
+    <ul>
+      <li><a href="/">Articles</a></li>
+      
+        <li><a href="/meetings/">Meetings</a></li>
+      
+        <li><a href="/members/">Members</a></li>
+      
+        <li><a href="/contributing/">Join / Contribute</a></li>
+      
+    </ul>
+  </div>
+
+<div id=main class=group>
+  <h1 class=articleTitle>node.js on Windows</h1>
+  <p><i>By Dan Baker, published 2010-09-09</i></p>
+I finally broke down, and setup node.js on my Windows XP box. The following is what I recommend doing: Walk through the page at <a href="http://github.com/ry/node/wiki/Building-node.js-on-Cygwin-%28Windows%29">github</a>. My comments on that page are as follows: <ol> <li>download cygwin</li> <ul> <li>Visit the site <a href="http://www.cygwin.com/">cygwin</a></li> <li>Click on the link in the top/right corner labeled "Install or Update cygwin now", and download the program called <a href="http://www.cygwin.com/setup.exe">setup</a></li> </ul> <li>install cygwin on your Windows box</li> <ul> <li>run setup.exe (Wizard will show)</li> <li>Cygwin Net Release Setup Program (Next)</li> <li>Choose A Download Source (Install from Internet, Next)</li> <li>Select Root Install Directory ("C:\dev\cygwin" is where I put it, Next)</li> <li>Select Local Package Directory ("C:\dev\cygwinPackages" is where I selected, Next)</li> <li>Select Your Internet Connection (Direct Connection is what I used, Next)</li> <li>Choose A Download Site (I selected one near the top that sounded familiar (xmission), Next)</li> <li>Wait for things to download...</li> <li>check several options (see the list on the github page)</li> <ul> <li>Expand "Devel" (long list expanded)</li> <li>devel -> gcc-g++</li> <li>devel -> git</li> <li>devel -> make</li> <li>devel -> openssl-devel</li> <li>devel -> pkg-config</li> <li>devel -> zlib-devel</li> <li>Expand "python" </li> <li>python -> python</li> </ul> <li>Finally, the install starts. This will take a long time (I left and came back later)</li> </ul> <li>run cygwin (Start -> Cygwin -> Cygwin Bash Shell) or the "Cygwin" shortcut installed on the desktop</li> <li>clone node.js repository. Visit <a href="http://nodejs.org/changelog.html">nodejs change log</a> to read about recent versions</li> <ul> <li>$ cd ~</li> <li>$ git clone git://github.com/ry/node.git</li> <li>$ cd node</li> <li>$ git fetch --all</li> <li>$ git tag</li> Note: This step shows a list of various tagged versions. You will want the last listed version, I think. That version for me was "v0.2.0" <li>$ git checkout v0.2.0</li> </ul> <li>build node.js</li> <ul> <li>$ ./configure</li> Note: this took me about 45 seconds, and reported: 'configure' finished successfully <li>$ make</li> Note: this took a me about 5 minutes, and reported: 'build' finished successfully <li>$ make install</li>Note: this took about 1 second, and reported: 'install' finished successfully </ul> <li>setup DNS</li> <ul> <li>$ vim /etc/resolv.conf</li>Note: this is suppose to start a text editor with the resolv.conf file -- but I didn't have "vim" or "vi" installed... <li> alternate method of editing files:</li> <ul> <li>From windows explorer, go find the folder you installed cygwin to. Right-click on the cygwin short cut on the desktop, "properties" and click "Find Target..."</li> <li>There should be several folders here, like: bin, dev, etc, home, lib ... </li> <li>The "home" folder will have a sub-folder with your named account. Under that folder is a folder called "node", which contained the files you checked out from git</li> <li>The "etc" folder is where we want to create a file called "resolv.conf"</li> <li>Use notepad, and paste in the following</li> nameserver 8.8.8.8 nameserver 8.8.4.4 <li>Restart cygwin:</li> <li>$ exit</li> <li>Run cygwin again</li> </ul> </ul> <li>Create a node.js application (http server app)</li> <ul> <li>Visit <a href="http://nodejs.org/">nodejs</a></li> <li>Copy the entire sample text:</li> <pre> var http = require("http"); http.createServer(function (req, res) { res.writeHead(200, {"Content-Type": "text/plain"}); res.end("Hello World\n"); }).listen(8124, "127.0.0.1"); console.log("Server running at http://127.0.0.1:8124/"); </pre> <li>Paste it into .../cygwin/home/[USER]/node/example.js</li> </ul> <li>Start this node.js app</li> <ul> <li>$ node example.js</li>Note: Should see message: Server running at http://127.0.0.1:8124/ </ul> <li>Use the running node.js app in a browser</li> <ul> <li>Open browser to: <a href="http://127.0.0.1:8124/">127.0.0.1:8124</a></li> <li>See "Hello World" in your browser!</li> </ul> <li>Stop node.js by pressed Ctrl-C</li> </ol> After using node in cygwin for awhile, I realized I needed to enhance my cygwin, so I did the following: <ol> <li>$ exit</li>Note: exit cygwin <li>Re-run Setup.exe</li> The setup program used to install cygwin (see Step#2 above) <ul> <li>run setup.exe</li> <li>Cygwin Net Release Setup Program (Next)</li> <li>Choose A Download Source (Install from Internet, Next)</li> <li>Select Root Install Directory (leave where you installed last time, Next)</li> <li>Select Local Package Directory (leave from previous install, Next)</li> <li>Select Your Internet Connection (Direct Connection, Next)</li> <li>Choose A Download Site (same as last time, Next)</li> <li>Wait for things to download...</li> <li>Select Pages (This is the MAIN page)</li> <li>In the "Search" box, type "curl"</li> <li>Expand "web", and next to "curl: Multi-protocol file transfer command-line tool" click on "Skip". It will change to a release number (7.20.1-1 in my case) with "Bin?" checked and "Src?" not checked</li> <li>Other things I installed: vim, curl, </li> </ul> <li>Run cygwin again</li> <li>Installing "NPM" (If you want to)</li> <ul> <li>says to do the following: curl http://npmjs.org/install.sh | sudo sh (this won't work in cygwin)</li> <li>DO: curl http://npmjs.org/install.sh | sh</li> (Always just ignore the "sudo" command)</li> </ul> </ol>
+</div>
+<div id=meta>
+  <div class="author">
+    <img src="http://www.gravatar.com/avatar/ff931fadd7674b0d064f7da76ee7a2b0?s=200&&d=monsterid">
+    <h3>About the Author</h3>
+    <dl class=meta>
+
+      <dt>Name:</dt>
+      <dd>Dan Baker</dd>
+
+      
+        <dt>Location:</dt>
+        <dd>Lindon, UT</dd>
+      
+
+      
+
+      
+
+      
+
+    </dl>
+    <p class=about>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+  <div class="website">
+    <h3>About UtahJS.com</h3>
+    <p>UtahJS is the website for the Utah JavaScript Users Group that meets to discuss and enjoy JavaScript!</p>
+<p>JavaScript in the browser, on the server or just about anywhere else.</p>
+<p>We love JavaScript but quite often talk about other topics such as CSS, HTML, cross browser coding, the internet… pretty much, anything that we find interesting.</p>
+<p>Everyone is welcome. Please join us!</p>
+  </div>
+</div>
+
+<div id=footer>
+  <p>Site design and code &copy; 2011 UtahJS, MIT license.</p>
+<p>Content and articles are copyrighted to the individual authors.</p>
+</div>
+
+<script>
+  var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview'],['_trackPageLoadTime']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+<script src="/js/hilite.js"></script>
+<script src="/js/languages/javascript.js"></script>
+<script src="/js/app.js"></script>
+
+<!--[if lt IE 7 ]>
+  <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+  <script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+<![endif]-->
+  
+</body>
+</html>

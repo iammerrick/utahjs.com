@@ -1,0 +1,7 @@
+---
+title: "Nodejs File Commands - 1 Minute Tutorial"
+author: Ken
+date: 2010-09-25
+---
+
+I want to share 2 quick things I learned writing my first Nodejs script: 1. __dirname, 2. synchronous file reading. 1. When running a script, the current working directory is the directory in which you invoked the script that started the server. Sounds normal for running a script from the command line, but it is really unintuitive if you are used to scripting languages like php or ruby that are invoked by Apache. So, for example, if you are in your home directory and you execute `nodejs /var/node/apps/myapp.js`, the current working directory is your home directory. That is where __dirname comes in. __dirname is a constant defined by Nodejs that represents the directory of the currently executing server. In my example, __dirname == "/var/node/apps";. So you'll want to use __dirname any time you need to manipulate files. 2. Nodejs encourages file reading to be asynchronous. One major reason is that a file read error such as file does not exist crashes your app. Another is that most of the time it is helpful to have other things run while the file is reading. In my case, I needed to load a file before I could accept connections, so I synchronous is the way to go. I needed just the contents; I discovered that opening files returns an object, but casting the object to a string yields the contents. Here is the code: <pre>var fs = require('fs'); var contents = String(fs.readFileSync(__dirname + '/file.txt'));</pre> That's it! Reading files is easy.

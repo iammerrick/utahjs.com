@@ -1,0 +1,7 @@
+---
+title: "Running Node.JS & NPM on Ubuntu 10.04"
+author: Kip
+date: "2010-09-07"
+---
+
+<p>The following commands will install the latest Node.JS and the package manager NPM on Ubuntu 10.04. Just copy and paste them into your console. You'll need to supply the root password once during the install.</p> <pre> sudo apt-get install g++ curl libssl-dev apache2-utils git-core curl git clone http://github.com/ry/node.git cd node ./configure make sudo make install curl http://npmjs.org/install.sh | sudo sh </pre> Now for some tests: Let's install some packages using NPM: <pre>sudo npm install connect express ejs</pre>
